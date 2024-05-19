@@ -169,6 +169,7 @@ def _internal_tagpt(force_json=False):
 
     if request.args.get("output") == "json" or force_json:
         return jsonify({
+            "stt": "success",
             "uid": res['uid'].hex().upper(),
             "read_ctr": res['read_ctr'],
             "enc_mode": res['encryption_mode'].name
@@ -195,7 +196,7 @@ def sdm_api_info_tt():
     try:
         return _internal_sdm(with_tt=True, force_json=True)
     except BadRequest as err:
-        return jsonify({"error": str(err)})
+        return jsonify({"error": str(err), "status": "failed"})
 
 
 @app.route('/tag')
@@ -208,7 +209,7 @@ def sdm_api_info():
     try:
         return _internal_sdm(with_tt=False, force_json=True)
     except BadRequest as err:
-        return jsonify({"error": str(err)})
+        return jsonify({"error": str(err), "status": "failed"})
 
 
 # pylint:  disable=too-many-branches, too-many-statements, too-many-locals
@@ -282,6 +283,7 @@ def _internal_sdm(with_tt=False, force_json=False):
 
     if request.args.get("output") == "json" or force_json:
         return jsonify({
+            "status": "success",
             "uid": uid.hex().upper(),
             "file_data": file_data.hex() if file_data else None,
             "read_ctr": read_ctr_num,
